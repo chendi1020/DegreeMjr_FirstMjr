@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset=utf-8>
+	<title>UNFRST Degree Mjr Move</title>
+	<meta name=description content="Undergraduate Major Movers: UNFRST degree major to first major">
+	<meta name=viewport content="width=device-width, initial-scale=1.0">
+	<!--[if lt IE 9]><script src=/dashboards/majors/html5shiv-printshiv.js></script><![endif]-->
+
+    <script src="./javascript.js"></script>
+    <link rel="stylesheet" href="styles.css"/>
+   
+
+</head>
+<body>
+  
+  <div id=container class="container">
+   
+   	<header role="banner">
+        <h1 style="text-align:center">UNFRST Major Migration</h1><h2 style="text-align:center">Degree Majors To First Majors By Degree College <u>(click the arcs to drill down to major level)</u></h2><h3 style="text-align:center">Graduating Cohort : 2011-12 to 2015-16</h3>
+		
+		<!--<div class="lead-in">
+		This visualization shows undergraduate students who changed their major in Fall semesters from 2010 to 2014.
+		</div> -->
+	<hr>
+	</header>	
+   
+<div title="select college">
+   
+<select id = "opts">
+
+    <option value="data2" >Agriculture and Natural Resources</option> 
+    
+    <option value="data4" >Arts and Letters</option>
+    <option value="data6" >Resdntl Arts and Humanities</option> 
+    <option value="data8" >Business</option> 
+    <option value="data10" >Communication Arts and Science</option>
+    <option value="data14" >Education</option>
+    <option value="data16" >Engineering</option>
+    
+    <option value="data24" >James Madison</option>
+     <option value="data28" >Lyman Briggs</option>
+    <option value="data30" >Music</option>
+    <option value="data32" >Natural Science</option>
+    <option value="data33" >Nursing</option>
+    <option value="data38" >Social Science</option>
+    
+     <option value="data46" >Veterinary Medicine</option>
+
+  <!-- and so on... -->   
+  </select>   
+      </div>
+
+<!--script>
+function setActiveStyleSheet(delay) {
+var myElement = document.querySelector("#circle");
+myElement.style.opacity = 0.25;
+}
+</script>
+<div onClick="setActiveStyleSheet(80)">test</div
+-->
+
+
+	<div id="message" class="wrap">
+		<main role="main">
+		<nav role=navigation>
+		<div id="timeline"></div>
+		</nav>		
+		<div id="chart"></div>
+		</main>
+	</div>
+  <div id="diagram" ></div>
+
+   
+      
+<script>
+  
+ 
+    
+    function graphic (data) {
+      var datafile = 'json/'+data+ '.json';
+        
+      var aLittleBit = Math.PI / 100000;
+        
+        
+ d3.json(datafile, function(data) {
+      var now = "All";
+      var labelCustom = " ";
+      var chart = Globalmigration.chart(data, {
+        element: '#diagram',
+        now: "All",
+        animationDuration: 700,
+        margin: 100,
+        arcPadding: 0.01,
+	maxRegionsOpen: 10,
+        layout: {
+          threshold: 1,
+          labelThreshold: 5,
+		  colors: '1f78b4 800026 00441b FF5733 33a02c 750657 e31a1c 00a592 41ae76 cab2d6 EEE81B 062975 80cdc1 5ACFDD e7298a 6a3d9a     062975'.split(' ').map(function(c) { return '#' + c; })
+        }
+      });
+     Globalmigration.timeline(chart, {
+        now: "All",
+        element: '#timeline',
+	   labelCustom: labelCustom
+      }); 
+      chart.draw(now);
+     });
+    };
+    
+    
+   (function() {
+      var datafile = 'json/data2.json';
+        
+      var aLittleBit = Math.PI / 100000;
+ d3.json(datafile, function(data) {
+      var now = "All";
+      var labelCustom = " ";
+      var chart = Globalmigration.chart(data, {
+        element: '#diagram',
+        now: now,
+        animationDuration: 700,
+        margin: 100,
+        arcPadding: 0.01,
+	maxRegionsOpen: 10,
+        layout: {
+          threshold: 1,
+          labelThreshold: 5,
+		  colors: '1f78b4 800026 00441b FF5733 33a02c 750657 e31a1c 00a592 41ae76 cab2d6 EEE81B 062975 80cdc1 5ACFDD e7298a 6a3d9a     062975'.split(' ').map(function(c) { return '#' + c; })
+        }
+      });
+     Globalmigration.timeline(chart, {
+        now: now,
+        element: '#timeline',
+	labelCustom: labelCustom
+      }); 
+      chart.draw(now);
+     });
+    })();
+    
+    
+ d3.select('#opts')
+  .on('change', function() {
+       
+           d3.selectAll("text").remove();
+     
+        var newData = d3.select(this).property('value');
+        graphic(newData);
+      // console.log(y);
+    
+});
+
+ 
+        
+   
+
+
+	</script>
+	<footer role="contentinfo">
+
+ 		<div class="license">
+           
+		This visualization is updated on 10/10/2016
+		</div>
+		
+	</footer>
+
+</body>
+</html>
