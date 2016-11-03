@@ -7624,6 +7624,7 @@ d3 = function() {
         groups[di] = {
           id: indices[di],
           region: region(indices[di]),
+        
           index: di,
           startAngle: lastX0,
           endAngle: x,
@@ -8304,17 +8305,30 @@ d3 = function() {
       infoTimer = setTimeout(function() {
         var color = d3.select(el).style('fill');
             var formatPercent = d3.format(".1%");
-
+      label=data.names[d.id];
+          
+       
         info
           .attr('transform', 'translate(' + (bbox.x + bbox.width / 2) + ',' + (bbox.y + bbox.height / 2) + ')');
 
+    if(d.outflow>0) {  
         var text = info.select('.text').selectAll('text')
           .data([
-            data.names[d.id],
-            'Total start with: ' + formatNumber(d.inflow)+ ' ('+ formatPercent(d.inflowPct)+')',
-            'Total graduated from: ' + formatNumber(d.outflow)+ ' ('+ formatPercent(d.outflowPct)+')',
-              'Additional input from other units: ' + formatNumber(d.outflow-d.inflow)
-          ]);
+          //  data.names[d.id],
+            'Total start with '+label+':' +formatNumber(d.inflow),
+              ' ('+ formatPercent(d.inflowPct)+' out of total N=' + d.sflow+')',
+            'Total graduated from '+':' + formatNumber(d.outflow),
+              ' ('+ formatPercent(d.outflowPct)+' out of total N=' + d.sflow+')',
+              'Additional students from other units: ' + formatNumber(d.outflow-d.inflow)
+          ])}
+          else {  
+        var text = info.select('.text').selectAll('text')
+          .data([
+          //  data.names[d.id],
+            'Total start with '+label+': ' +formatNumber(d.inflow),
+              ' ('+ formatPercent(d.inflowPct)+' out of total N=' + d.sflow+')'
+            
+          ])};
         text.enter().append('text');
         text
           .text(function(t) { return t; })
