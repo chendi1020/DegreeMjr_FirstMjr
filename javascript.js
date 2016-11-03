@@ -8319,7 +8319,7 @@ d3 = function() {
               ' ('+ formatPercent(d.inflowPct)+' out of total N=' + d.sflow+')',
             'Total graduated from '+':' + formatNumber(d.outflow),
               ' ('+ formatPercent(d.outflowPct)+' out of total N=' + d.sflow+')',
-              'Additional students from other units: ' + formatNumber(d.outflow-d.inflow)
+              'Students from other units: ' + formatNumber(d.outflow-d.inflow)
           ])}
           else {  
         var text = info.select('.text').selectAll('text')
