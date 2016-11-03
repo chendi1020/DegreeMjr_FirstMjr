@@ -18,61 +18,65 @@ PAG <- sqldf("select a.*, b.Short_Name as COLLEGE_FIRST_NAME, c.Short_Name as CO
              left join COLLNM c 
              on a.COLLEGE_DEGREE=c.Coll_Code")
 
+#concate to prevent same character
+PAG$COLLEGE_FIRST_NAME <- paste(PAG$COLLEGE_FIRST, PAG$COLLEGE_FIRST_NAME, sep = "-")
+PAG$MAJOR_NAME_FIRST <- paste(PAG$MAJOR_FIRST_SEMESTER, PAG$MAJOR_NAME_FIRST, sep = "-")
+
+PAG$COLLEGE_DEGREE_NAME <- paste(PAG$COLLEGE_DEGREE, PAG$COLLEGE_DEGREE_NAME, sep = "-")
+PAG$MAJOR_NAME_DEGREE <- paste(PAG$MAJOR_DEGREE, PAG$MAJOR_NAME_DEGREE, sep = "-")
+
+#aggregation
+library(dplyr)
+
+Agg2 <- PAG %>% group_by(GRADUATING_COHORT, COLLEGE_FIRST_NAME,COLLEGE_DEGREE_NAME, MAJOR_NAME_FIRST,  MAJOR_NAME_DEGREE) %>% summarise(count=n())
+
+
+
+#gather all college and major from 2 time points
+
+DS1<- sqldf("select distinct   COLLEGE_DEGREE_NAME as coll,  MAJOR_NAME_DEGREE as mjr
+            from Agg2
+            union
+            select distinct COLLEGE_FIRST_NAME , MAJOR_NAME_FIRST
+            from Agg2")
+
+#for each college, build college following by majors within that college list
+t<- split(DS1, DS1$coll)
+listf <- function(x){ c(unique(x$coll),x$mjr)}
+test <- sapply(t, listf)
+listall <- as.data.frame(do.call(c,test))
+
+
+colnames(listall) <- "Org"
+listall$merge <-1
+
+#main structure  for building the square matrix
+DS2 <- sqldf("select a.org, b.org as org1
+             from listall a, listall b
+             on 1=1
+             ")
+
+
+lvl <- unique(DS2$org1)
+
+levels(DS2$Org) <- lvl
+#covert org1 from char to factor
+DS2$org1 <- as.factor(DS2$org1)
+levels(DS2$org1) <- lvl
+
+
+
+
 #build loop around the degree college
 degrcoll <- unique(PAG$COLLEGE_DEGREE)
 
 #loop through each degree college
 for (k in degrcoll){
-        data <- PAG[PAG$COLLEGE_DEGREE==k,]
+        Agg1 <- PAG %>% filter(COLLEGE_DEGREE==k) %>%group_by(GRADUATING_COHORT, COLLEGE_FIRST_NAME,COLLEGE_DEGREE_NAME ) %>% summarise(count=n())
         
-        #concate to prevent same character
-        data$COLLEGE_FIRST_NAME <- paste(data$COLLEGE_FIRST, data$COLLEGE_FIRST_NAME, sep = "-")
-        data$MAJOR_NAME_FIRST <- paste(data$MAJOR_FIRST_SEMESTER, data$MAJOR_NAME_FIRST, sep = "-")
-        
-        data$COLLEGE_DEGREE_NAME <- paste(data$COLLEGE_DEGREE, data$COLLEGE_DEGREE_NAME, sep = "-")
-        data$MAJOR_NAME_DEGREE <- paste(data$MAJOR_DEGREE, data$MAJOR_NAME_DEGREE, sep = "-")
-        
-        #aggregation
-        library(dplyr)
-        
-        Agg1 <- data %>% group_by(GRADUATING_COHORT, COLLEGE_FIRST_NAME,COLLEGE_DEGREE_NAME ) %>% summarise(count=n())
-        Agg2 <- data %>% group_by(GRADUATING_COHORT, COLLEGE_FIRST_NAME,COLLEGE_DEGREE_NAME, MAJOR_NAME_FIRST,  MAJOR_NAME_DEGREE) %>% summarise(count=n())
-        Agg3 <- data %>% group_by(GRADUATING_COHORT,  MAJOR_NAME_FIRST,  MAJOR_NAME_DEGREE) %>% summarise(count=n())
-        Agg4 <- data %>% group_by(GRADUATING_COHORT, COLLEGE_FIRST_NAME,  MAJOR_NAME_DEGREE) %>% summarise(count=n())
-        Agg5 <- data %>% group_by(GRADUATING_COHORT, MAJOR_NAME_FIRST,  COLLEGE_DEGREE_NAME) %>% summarise(count=n())
-        
-        #gather all college and major from 2 time points
-        
-        DS1<- sqldf("select distinct   COLLEGE_DEGREE_NAME as coll,  MAJOR_NAME_DEGREE as mjr
-                    from Agg2
-                    union
-                    select distinct COLLEGE_FIRST_NAME , MAJOR_NAME_FIRST
-                    from Agg2")
-        
-        #for each college, build college following by majors within that college list
-        t<- split(DS1, DS1$coll)
-        listf <- function(x){ c(unique(x$coll),x$mjr)}
-        test <- sapply(t, listf)
-        listall <- as.data.frame(do.call(c,test))
-       
-        
-        colnames(listall) <- "Org"
-        listall$merge <-1
-        
-        #main structure  for building the square matrix
-        DS2 <- sqldf("select a.org, b.org as org1
-                     from listall a, listall b
-                     on 1=1
-                     ")
-        
-        
-        lvl <- unique(DS2$org1)
-        
-        levels(DS2$Org) <- lvl
-        #covert org1 from char to factor
-        DS2$org1 <- as.factor(DS2$org1)
-        levels(DS2$org1) <- lvl
-        
+        Agg3 <- PAG %>% filter(COLLEGE_DEGREE==k) %>% group_by(GRADUATING_COHORT,  MAJOR_NAME_FIRST,  MAJOR_NAME_DEGREE) %>% summarise(count=n())
+        Agg4 <- PAG %>% filter(COLLEGE_DEGREE==k) %>% group_by(GRADUATING_COHORT, COLLEGE_FIRST_NAME,  MAJOR_NAME_DEGREE) %>% summarise(count=n())
+        Agg5 <- PAG %>% filter(COLLEGE_DEGREE==k) %>% group_by(GRADUATING_COHORT, MAJOR_NAME_FIRST,  COLLEGE_DEGREE_NAME) %>% summarise(count=n())
         
         
         names(Agg3)<-names(Agg1)

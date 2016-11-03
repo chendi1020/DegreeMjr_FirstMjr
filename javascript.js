@@ -8311,9 +8311,9 @@ d3 = function() {
         var text = info.select('.text').selectAll('text')
           .data([
             data.names[d.id],
-            'Total In: ' + formatNumber(d.inflow)+ ' ('+ formatPercent(d.inflowPct)+')',
-            'Total Out: ' + formatNumber(d.outflow)+ ' ('+ formatPercent(d.outflowPct)+')',
-              'Net In: ' + formatNumber(d.inflow-d.outflow)
+            'Total start with: ' + formatNumber(d.inflow)+ ' ('+ formatPercent(d.inflowPct)+')',
+            'Total graduated from: ' + formatNumber(d.outflow)+ ' ('+ formatPercent(d.outflowPct)+')',
+              'Additional input from other units: ' + formatNumber(d.outflow-d.inflow)
           ]);
         text.enter().append('text');
         text
@@ -8362,7 +8362,7 @@ d3 = function() {
 
         var text = info.select('.text').selectAll('text')
           .data([
-            data.names[d.source.id] + ' → ' + data.names[d.target.id] + ': ' + formatNumber(d.source.value)
+            data.names[d.source.id] + '←' + data.names[d.target.id] + ': ' + formatNumber(d.source.value)
           ]);
         text.enter().append('text');
         text.exit().remove();
