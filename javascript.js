@@ -8296,28 +8296,33 @@ d3 = function() {
     // eg: West Africa: Total inflow 46, Total outflow 2
     function groupInfo(d) {
       var el = this;
-
+   
       if (infoTimer) {
         clearTimeout(infoTimer);
       }
+        
+        
 
       var bbox = el.getBBox();
       infoTimer = setTimeout(function() {
         var color = d3.select(el).style('fill');
             var formatPercent = d3.format(".1%");
       label=data.names[d.id];
-          
        
+ 
         info
           .attr('transform', 'translate(' + (bbox.x + bbox.width / 2) + ',' + (bbox.y + bbox.height / 2) + ')');
-
-    if(d.outflow>0) {  
+          
+   
+  
+   
+   if(d.outflow>0) {  
         var text = info.select('.text').selectAll('text')
           .data([
           //  data.names[d.id],
-            'Total start with '+label+':' +formatNumber(d.inflow),
+            'Start with '+label+':' +formatNumber(d.inflow),
               ' ('+ formatPercent(d.inflowPct)+' out of total N=' + d.sflow+')',
-            'Total graduated from '+':' + formatNumber(d.outflow),
+            'Graduated from '+':' + formatNumber(d.outflow),
               ' ('+ formatPercent(d.outflowPct)+' out of total N=' + d.sflow+')',
               'Students from other units: ' + formatNumber(d.outflow-d.inflow)
           ])}
@@ -8325,10 +8330,13 @@ d3 = function() {
         var text = info.select('.text').selectAll('text')
           .data([
           //  data.names[d.id],
-            'Total start with '+label+': ' +formatNumber(d.inflow),
+            'Start with '+label+': ' +formatNumber(d.inflow),
               ' ('+ formatPercent(d.inflowPct)+' out of total N=' + d.sflow+')'
             
           ])};
+          
+          
+          
         text.enter().append('text');
         text
           .text(function(t) { return t; })

@@ -323,6 +323,7 @@ svg {
 }
 .info text {
   fill: white;
+    font-size: 10px;
 }
 
 #circle circle {
@@ -332,6 +333,7 @@ svg {
 text {
   cursor: default;
   fill: #333;
+    font-size: 11px;
 }
 .group-arc + text {
   -webkit-transition: opacity 0.4s;
