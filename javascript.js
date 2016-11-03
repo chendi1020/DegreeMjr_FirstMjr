@@ -8322,7 +8322,7 @@ d3 = function() {
           //  data.names[d.id],
             'Start with '+label+':' +formatNumber(d.inflow),
               ' ('+ formatPercent(d.inflowPct)+' out of total N=' + d.sflow+')',
-            'Graduated from '+':' + formatNumber(d.outflow),
+            'Grad from '+label+':' + formatNumber(d.outflow),
               ' ('+ formatPercent(d.outflowPct)+' out of total N=' + d.sflow+')',
               'Students from other units: ' + formatNumber(d.outflow-d.inflow)
           ])}
